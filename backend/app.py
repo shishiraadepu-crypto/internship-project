@@ -541,5 +541,16 @@ def handle_exception(exc):
     return error(str(exc), 500)
 
 
+@app.get("/health")
+def health():
+    try:
+        with db_cursor() as cur:
+            cur.execute("SELECT 1")
+            cur.fetchone()
+        return {"status": "Database Connected"}
+    except Exception as e:
+        return {"error": str(e)}, 500
+
+
 if __name__ == "__main__":
     app.run(debug=True)
